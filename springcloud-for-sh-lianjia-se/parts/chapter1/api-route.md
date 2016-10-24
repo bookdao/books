@@ -1,7 +1,7 @@
 <!-- toc -->
 
 ### 认证
-所有接口文档（[http://api.doc.dooioo.org/doc](http://api.doc.dooioo.org/doc)）中出现***需要授权***的Label，接口请求时都必须传递Http Request Header: `X-Token`。
+所有接口文档（[http://api.doc.dooioo.org/doc](http://api.doc.dooioo.org/doc)）中出现***需要授权***的Label时，接口请求都必须传递Http Request Header: `X-Token`。
 
 ![Login Label]({{book.imagePath}}/parts/chapter1/images/login_label.png)
 
@@ -55,7 +55,7 @@ API网关只负责认证，授权则交给每个服务提供者。
 ![api route bizcode]({{book.imagePath}}/parts/chapter1/images/apiroute_bizcode.png)
 
 ### 路由
-API网关是访问机房服务的桥梁，而能否访问到某个服务，则取决于网关是否有此服务的路由信息。 
+API网关是访问机房服务的桥梁，而能否访问某个服务，则取决于网关是否有此服务的路由信息。 
 
 路由，可理解为虚拟路径和主机IP的映射规则：
 ```
@@ -70,7 +70,7 @@ API网关是访问机房服务的桥梁，而能否访问到某个服务，则�
 路由目前分为静态路由和动态路由。
 
 #### 动态路由
-所谓动态路由，就是服务会自动发现，并自动建立服务名到IP的映射规则，无需人为处理。  
+所谓动态路由，就是通过服务发现，自动建立服务名到IP的映射规则，无需人为处理。  
   
 目前，我们使用Eureka来实现服务的自动发现，大家可以访问：[http://discorvery1.se.dooioo.com](http://discovery1.se.dooioo.com)查看所有注册的服务。
   
@@ -88,7 +88,7 @@ API网关是访问机房服务的桥梁，而能否访问到某个服务，则�
 静态路由，是指需要管理员手动维护的映射规则。  
 通常是为了方便测试或者将老系统接入API网关。
 
-静态路由虚拟路径的命名规范： /产品线/产品/server，比如：/ky/tel/server，表示客源产品线的电话服务。
+静态路由虚拟路径的命名规范： /产品线/应用/server，比如：/ky/tel/server，表示客源产品线的电话服务。
 
 静态路由的映射规则（path=> location)示例：
 ```
@@ -110,6 +110,232 @@ API网关是访问机房服务的桥梁，而能否访问到某个服务，则�
 开发和测试人员可通过接口： [http://api.route.dooioo.com/admin/routes.json](http://api.route.dooioo.com/admin/routes.json) ，查询当前可用路由信息。
 
 集成环境将.com调整为.org，测试环境将.com调整为.net。
+
+### SpringMVC&SpringBoot项目接入API网关
+
+#### 接口请求隔离
+目前我们正在限制API接口请求方的IP - 接口请求隔离，下面我以房源接口为例，介绍如何隔离接口请求：
+1. 假设客户端（IP：10.8.1.22）请求了房源接口：`http://fang.dooioo.com/api/v2/house/1234`，房源部署在IP为`192.168.0.22`的主机上。  
+
+2. 请求到达Nginx后，Nginx判断Request Path是否以`/api` 开头，如果是，则继续判断客户端IP是否属于`机房网段`（IP段白名单），如果客户端IP不属于IP白名单，Nginx直接响应Http状态码：`403`，否则请求转发至192.168.0.22的房源节点。  
+
+3. 网段隔离后，所有应用的接口（http：//domain.dooioo.com/api/**)`仅限服务端通过HttpClient调用`，门店和总部员工通过浏览器、Postman、编写代码均无法请求接口。  
+
+4. Web页面或测试人员访问应用接口，统一通过API网关代理。  
+ 在此之前，应用须向API网关添加自己的静态路由信息。  
+ 比如房源的静态路由：  
+	`/fy/old/server` => `http://fang.dooioo.com` ，即 path => location 的映射。  
+ 之前Ajax或Postman里的接口请求地址：  
+`http://fang.dooioo.com/api/v2/house/1234`  
+通过API网关访问时调整成：  
+`http://api.route.dooioo.com/fy/old/server/api/v2/house/1234`     
+
+5. 服务端程序调用房源接口时，通过应用的域名访问：`http://fang.dooioo.com/api/v2/house/1234`。  
+
+6. 简而言之，所有应用的接口（http ://domain.dooioo.com/api/**)，服务端可通过应用域名访问，非服务端的接口调用只能通过API网关代理。
+
+##### 注意事项
+1. 如果接口路径不以”/api”开头，则不会限制调用方的IP，比如：`/user/api/**`、`/v1/api/**`，局域网内的任何设备、任何人都可以访问。  
+   出于数据安全性的考虑，请尽量将接口改造成`/api/**`，新增接口的路径前缀请设置为`/api/`。  
+	注意，此处所说的接口：
+	`仅限提供给其他系统调用的数据接口，自己项目使用的ajax接口可通过登录SSO拦截器拦截`。  
+   
+2. 接口调用方的IP限制策略默认不启用，必须向`运维报备`后才启用。   
+ 
+3. 接口网段隔离的策略，请务必在测试、集成环境调试通过以后，再上线生产环境。
+4. 老项目不以`/api`为前缀的接口路径重构为`/api/**`，服务端调用仅需调整接口路径，域名保持不变，非服务端（页面或测试）则通过API网关访问。  
+
+5. 老项目的改造流程示例:  
+	* 原接口： `http://xiaoqu.dooioo.com/house/api/v2/nearby`。  
+	内网的员工都能访问，出于安全性考虑，我们将接口按约定前缀`/api`重构为：`http://xiaoqu.dooioo.com/api/house/v2/nearby`。   
+   
+    * 项目新增接口拦截器：[AuthorizedRequestInterceptor](authorize-interceptor.html)，拦截应用接口的所有调用，但是注意，登录SSO拦截器不能拦截接口。  
+
+	* 钉钉联系运维部的小伙伴，申请开启接口调用的网段隔离，先调整测试和集成环境的Nginx配置，测试通过之后，上线时通知运维部调整你的应用生产环境的Nginx配置。  
+
+	* 发邮件（或钉钉）给使用此接口的团队，告知新的接口路径，说明启用接口请求隔离，老接口会保留一段时间（提供明确的deadline）。  
+	  如果不知道谁在调用你的接口，可协助运维部小伙伴调整Nginx、记录接口的访问日志。  
+
+	* 如果有Web页面访问此接口，找API网关的项目负责人，添加应用的静态路由，并告知Web页面调用方新的接口路径。  
+	  比如你应用的静态路由：/loupan/xiaoqu/server => http://xiaoqu.dooioo.com，
+	   则页面请求路径调整为：http://api.route.dooioo.com/loupan/xiaoqu/server/api/house/v2/nearby 。 
+	
+	
+
+#### API网关接口路径的组成
+通过API网关访问接口时路径由三部分组成：`API网关域名`+`应用注册的虚拟路径`+`原始接口路径`  
+  API网关域名：`http://api.route.dooioo.com`  
+  应用注册的虚拟路径： `/fy/old/server`  
+  原始接口的路径： `/api/v2/house/1234`  
+  完整的请求路径：`http://api.route.dooioo.com/fy/old/server/api/v2/house/1234`
+
+#### 接口数据的安全：登录 OR 无须登录
+通常情况下，登录SSO拦截器（基于工号和密码）是不会拦截数据接口的。  
+因为调用方通常是服务端程序，比如定时任务，基于工号和密码的权限验证体系无法适用。
+
+这会导致一个问题：任何知道接口地址的内网员工都能请求该接口，尤其是涉及到利益分配或者员工隐私的接口。
+##### 限制调用方IP
+
+为了增强接口调用的安全性，我们决定限制接口（`/api/**`）调用的IP来源：
+`机房网段的IP地址都属于白名单，非机房网段的IP禁止通过应用域名访问接口，只能通过API网关访问原始接口`。
+
+##### 引入接口拦截器，敏感接口进行登录认证
+同时，配合API网关，接口提供方也增加了类似登录SSO拦截器的[接口拦截器](authorize-interceptor.html)，请自己Copy源码，并配置拦截所有接口。  
+  
+如果你的接口无须登录，可公开访问，请在@Controller的方法上添加注解：`@LoginNeedless`；而无此注解的接口默认都会校验请求是否是登录员工发出的。
+
+要求登录的接口，可通过Http Header: `StandardHttpHeaders.X_Login_UserCode` 和 `StandardHttpHeaders.X_Login_CompanyId`获取当前登录人的工号和公司ID。
+
+ 以下是老项目的编码示例，仅供大家参考和理解：
+ ``` java
+ /**
+ * 无需登录身份认证的接口请手动添加注解：@LoginNeedless，默认接口都需要登录认证的<br>
+ * 请确保你的接口都是以‘/api/’为前缀的，另外记得找运维启用接口调用的IP来源限制。
+ */
+@RestController
+@RequestMapping(value = "/api/salary")
+public class SalaryApiController {
+
+  /**
+   * 此处的安全要点是，此接口仅能查看接口请求者自己的工资，不能随便传一个工号就能访问别人的。<br>
+   * 这个接口没有添加注解：@LoginNeedless，因此可以保证接口请求方肯定是已登录的员工。
+   * 
+   * @author huisman
+   * @version v1
+   * @param loginUserCode 身份认证信息：接口请求方的工号（登录的工号），同时也是业务参数
+   * @param loginCompanyId 身份认证信息：接口请求方登录时所选公司ID（存在多公司）
+   * @since 2016年10月20日
+   * @summary 查询自己的工资
+   */
+  @RequestMapping(value = "/v1/mySalary", method = RequestMethod.GET)
+  public Salary mySalary(
+      @RequestHeader(StandardHttpHeaders.X_Login_UserCode) int loginUserCode,
+      @RequestHeader(StandardHttpHeaders.X_Login_CompanyId) int loginCompanyId) {
+
+    // 业务授权： oms jar去根据loginUserCode和公司ID去判断是否有权限查看userCode的工资
+    // Employee emp= employeeService.findUserPrivilege(loginUserCode);
+    // ! emp.hasPrivilege("view_my_salary_only")
+
+    // 业务逻辑，当前登录工号本身是业务逻辑的一部分
+    // return salaryService.findByUserCode(loginUserCode);
+    return new Salary();
+  }
+
+  /**
+   * 这个接口和上一个接口最大的不同是存在两个工号：loginUserCode和userCode。<br>
+   * 为啥会有两个工号呢，userCode是实际业务中需要的参数，代表想查看谁的工资，<br>
+   * 而loginUserCode代表接口请求方身份，是一个合法的登录员工，不是一个离职、账号被屏蔽等员工状态异常的账号。<br>
+   * 这个loginUserCode业务接口通常用来检查接口请求者的权限，判断loginUserCode是否有权限查看userCode的工资。<br>
+   * 比如有的接口的创建人、修改人都可以是loginUserCode，接口提供者可判断loginUserCode是否可以操作数据。
+   * 
+   * @author huisman
+   * @version v1
+   * @param loginUserCode 身份认证信息：接口请求方的工号（登录的工号）
+   * @param loginCompanyId 身份认证信息：接口请求方登录时所选公司ID（存在多公司）
+   * @param userCode 业务参数，想查询谁的工资信息，工号
+   * @since 2016年10月20日
+   * @summary 查看任何人的工资
+   */
+  @RequestMapping(value = "/v1/anyoneSalary", method = RequestMethod.GET)
+  public Salary anyoneSalary(
+      @RequestHeader(StandardHttpHeaders.X_Login_UserCode) int loginUserCode,
+      @RequestHeader(StandardHttpHeaders.X_Login_CompanyId) int loginCompanyId,
+      @RequestParam(value = "userCode") int userCode) {
+    // 业务授权： oms jar去根据loginUserCode和公司ID去判断是否有权限查看userCode的工资
+    // Employee emp= employeeService.findUserPrivilege(loginUserCode);
+    // ! emp.hasPrivilege("view_anyone_salary")
+
+    // 业务逻辑，当前登录人的工号不会用于业务，只为了判断请求方是否有权限操作数据
+    // return salaryService.findByUserCode(userCode);
+    return new Salary();
+  }
+
+
+  /**
+   * 这个接口没有用Header来接收登录人的工号，没用使用loginUserCode来进行业务授权。<br>
+   * 它的应用场景：业务方只是想确保接口是被一个正常登录的员工请求的，<br>
+   * 也就是说唯一能访问此接口的人肯定是用工号和密码登录过系统的。
+   * @author huisman
+   * @version v1
+   * @param userCode 业务参数，工号
+   * @since 2016年10月20日
+   * @summary omg
+   */
+  @RequestMapping(value = "/v1/omg", method = RequestMethod.GET)
+  public int omg(@RequestParam(value = "userCode") int userCode) {
+    // 业务逻辑
+    // 我只想确保我的请求方都是正派人，实名认证过的。
+    return userCode;
+  }
+  
+   /**
+    * 无需登录的接口示例，任何人都可访问，请注意：接口任何参数名不能出现X-Login-UserCode和X-Login-CompanyId。<br>
+    * 必须手动添加@LoginNeedless注解，敏感接口请不要添加此注解。
+    * @author huisman
+    * @version v1
+    * @param userCode 业务参数，工号
+    * @since 2016年10月20日
+    * @summary oreally
+    */
+  @LoginNeedless
+  @RequestMapping(value = "/v1/oreally", method = RequestMethod.GET)
+  public int oreally(@RequestParam(value = "userCode") int userCode) {
+    // 业务逻：我是公开数据，谁都能查看，有求必应。
+    return userCode;
+  }
+
+  public static class Salary {
+  }
+}
+ ```
+
+ 假设以上代码所在应用的访问域名：http: //salary.dooioo.com，我们在API网关登记的静态路由是： /oa/salary/server => http://salary.dooioo.com。    
+
+我们对比下服务端调用和非服务端调用，请求构造上的区别：   
+  
+授权接口（需要登录的接口）：查看任何人的工资
+ ``` java
+   # 通过API网关访问
+  requst url: 
+     http://api.route.dooioo.com/oa/salary/server/api/salary/v1/anyoneSalary?userCode=8989989
+  Request Header: 
+  		 X-Token:c71edad37eb20f300639496ba7b28d20
+  		 
+  #服务端调用
+  requst url: 
+     http://salary.dooioo.com/api/salary/v1/anyoneSalary?userCode=8989989
+  Request Header: 
+  		 X-Login-UserCode:8781213412
+  		 X-Login-CompanyId:1
+  		 
+   
+ ```  
+
+需要登录的接口，两种请求方式的区别：
+   * API网关访问接口时，无需传递`X-Login-UserCode`和`X-Login-CompanyId`，只需要指定Header: `X-Token`，API网关根据`X-Token`自动转换为：`X-Login-UserCode`和`X-Login-CompanyId`，放在Request Header里传递给后台服务；
+   * 服务端调用时，通过应用域名请求原始接口，原始接口需要什么参数，都必须提供。比如“查看任何人的工资”，这个接口需要参数：`X-Login-UserCode`、`X-Login-CompanyId`、`userCode`，构造HttpClient请求时必须提供所有参数，服务端程序之间默认是信任的，可查看任意数据。  
+  
+公开接口（不需要登录的接口）：oreally
+``` java
+   # 通过API网关访问
+  requst url: 
+     http://api.route.dooioo.com/oa/salary/server/api/salary/v1/oreally?userCode=8989989
+  		 
+  #服务端调用
+  requst url: 
+     http://salary.dooioo.com/api/salary/v1/oreally?userCode=8989989
+ ```  
+不需要登录的接口，两者构造Http请求时的区别：
+   * API网关访问和服务端调用唯一的不同是接口请求路径不同。  
+   * 两种调用方式都必须提供原始接口所需的参数。
+
+##### 接口仅限服务端调用
+ 如果应用有此需求，需修改接口拦截器，增加逻辑：
+ 	`当发现Request有“X-Route-By”请求头时，直接响应403`。  
+注意，有些接口可能支持两种访问方式（API网关和服务端），你可能要检查Controller的方法上是否有特定注解，暗示了这个逻辑。
+另外，接口需要登录和接口仅限服务端调用不能并存。
+  
+
 ### 跨域支持
 API网关支持CORS规范，IE10、Chrome、FireFox、Safari浏览器可直接跨域访问接口，不需要通过Jsonp获取数据。
 

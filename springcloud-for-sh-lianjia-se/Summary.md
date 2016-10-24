@@ -13,6 +13,7 @@ bui #Summary
 	* [项目结构及规范](parts/chapter1/project-structure.md)
 	* [Parent pom.xml](parts/chapter1/maven-parent-pom.md)
 	* [编码之前](parts/chapter1/before-coding.md)
+	* [扩展：老项目接口拦截器的实现](parts/chapter1/authorize-interceptor.md)
 	* [扩展：REST API最佳实践](parts/chapter1/restful-api-v1.4.md)
 	* [扩展：REST API版本控制](parts/chapter1/restful-api-versioncontrol.md)
 	* [扩展：Ajax 跨域](parts/chapter1/cors.md)
