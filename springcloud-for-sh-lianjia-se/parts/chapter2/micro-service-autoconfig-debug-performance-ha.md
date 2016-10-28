@@ -17,6 +17,7 @@ Why? 因为听起来很美好。 O(∩_∩)O~
 * 服务负载均衡 - Ribbon，跨数据中心路由和灵活的负载均衡策略
 * RPC - 基于Http协议的JSON文本序列化和反序列化
 * 服务调用 - Feign，声明式HttpClient
+* 服务弹性容错 - Hystrix，资源隔离
 * 服务配置 - 基于Git的Spring Config Server
 
 ### Spring Cloud版本
@@ -91,9 +92,13 @@ Brixton发布详情，请参考： [Spring Cloud Brixton Release Notes
   //创建人姓名，model里不应该出现此字段
   //private int cuserName
 ```
-我们的业务表不会冗余创建人的名称，即使UI需要呈现创建人名称，原子服务也不应返回创建人的姓名。  
+我们的业务表不会冗余创建人的名称，即使UI需要呈现创建人名称，原子服务也不应返回创建人的姓名。    
+
 如果客户端需要呈现创建人名称呢？  
-为了支撑业务，存在另一种角色：`组合原子接口的服务`。目前大多数UI项目属于此类角色，它们`偏向业务`，有自己的业务Model，有些业务可能要调用几个不同的原子服务拼接业务数据。  
+为了支撑业务，存在另一种角色：`组合原子接口的服务`。  
+  
+目前大多数UI项目属于此类角色，它们`偏向业务`，有自己的业务Model，有些业务可能要调用几个不同的原子服务拼接业务数据，大家`可类比成老MVC项目中的业务API`。 
+ 
 比如，为了显示商圈创建人的姓名，组合原子接口的服务的代码可能如下  
 ``` java
   //原子接口
@@ -118,7 +123,8 @@ Brixton发布详情，请参考： [Spring Cloud Brixton Release Notes
   针对多张表的数据操作最好放在同一个接口，这样可保证只有一个事务，避免分布式事务，而跨服务的数据交互可使用分布式消息队列。
   
 #### 必须跨库关联的业务，可通过数据仓库查询  
-大部分是各种维度的业务指标统计。
+各种维度的业务指标统计，可利用数据仓库统一查询。
+数据仓库，通俗地讲，订阅了大部分数据库的表，我们的跨库查询SQL仅限数据仓库的查询。
 
 ### Coding演化
 #### 服务暴露
@@ -144,6 +150,9 @@ Spring Cloud默认以Http协议暴露服务，具体到编码层面，开发人�
      }
   }
 ```
+
+服务实现方的Spring MVC Controller在架构上仅充当服务暴露的角色，未来版本可能更换成Netty。
+
 #### 客户端：谁将调用微服务？
 编写微服务的另一个要点就是：我们的微服务支持哪些客户端？
 目前，公司的项目主要面向以下客户端：
@@ -311,7 +320,7 @@ public interface BizCircleSpi{
        public BizCircle findByIdV1(@PathVariable(value=“id”)int id);
   }
 ```
-第三版主要解决不同客户端调用时Rest语义上的兼容以及业务码。  
+第三版主要解决不同客户端调用时Rest语义上的兼容以及引入业务码。  
   
 Rest语义兼容，目前只有：`Feature.NullTo404`，即Rest请求接口返回Null时，服务提供方应该响应`404`。  
   
@@ -341,7 +350,7 @@ SPI调用
 	);
 ```
 
-业务码（`BizCode`）主要应用于业务流程异常时对客户端的反馈，一般配合断言(`com.dooioo.se.lorik.core.web.result.Assert`)使用。  
+业务码（`BizCode`）主要用于业务流程异常时对客户端的反馈，一般配合断言(`com.dooioo.se.lorik.core.web.result.Assert`)使用。  
   
 业务码主要由两个字段：
 * code  业务码值，整型。
@@ -372,7 +381,7 @@ SPI调用
     //配合com.dooioo.se.lorik.core.web.result.Assert
     //抛出业务码：没有权限，其实是运行时异常，中断业务流程
    Assert.authorized(userSpi.hasPrivileV1(loginUserCode,  
-“can_view_bizcircle”,LoupanBizCode.loginUserCode);
+“can_view_bizcircle”,LoupanBizCode.NO_PRIVLEGE);
    //正常业务流程
    return bizCircleDao.findById(id);
    }
@@ -413,10 +422,13 @@ Rest方式请求接口，如果没权限，业务码输出：
 ```
 
 
-
-
-
-
+## 配置
+## 性能
+## 高可用
+## 监控：多维度Metric 
+## 测试：单元测试
+## 文档：接口文档自动化
+## 代码：自动生成、编码理念、响应式编程
 ## 调试：基于Http RPC
 目前版本的微服务仅支持基于Http协议、文本序列化（JSON)的RPC调用。
 ### 调用方（客户端）
