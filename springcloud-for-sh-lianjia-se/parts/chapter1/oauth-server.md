@@ -224,41 +224,47 @@ spi.httpclient:
 #### 所有接口将强制检查签名参数signature
 未来版本的OAuth Server将强制检查请求参数：`signature`。  
 signature的计算规则如下：
-* 所有请求自动增加参数： `timestamp`，其有效值为请求发出时的时间戳。  
+* 所有客户端请求自动增加参数： `timestamp`，其有效值为请求发出时的时间戳。  
   OAuth Server会比较服务器时间和请求时间戳，如果两者`相距15分钟`以上，就直接响应`403`，并提示请求已过期，因此客户端必须`定时同步时钟`。
 * 所有参数按照参数名升序排列，然后按照 `参数名=参数值` 格式以&拼接；如果参数值是多个，则参数值以英文逗号（,)隔开追加在一起。
 * 将客户端分配到的clientSecret追加在最后，参数名为client_secret。
 * 对以上步骤生成的字符串进行MD5。
-##### 请求示例
-1.  原始请求信息：  
-clientSecret：f6848af3e8a4fcaba2b3911f4da7a7c5 
-接口：GET https://oroute.dooioo.com/loupan/server/v1/reblock  
-参数：userCode=892312302&companyId=12&city=230&zone=test&zone=dev&timestamp=1477621956723&p1=&p1=2&p1=null
+    
+#### Signature计算示例  
+接口：https://oroute.dooioo.com/loupan/server/v1/reblock  
+  
+参数：userCode=892312302&companyId=12&city=230&zone=test&zone=dev&timestamp=1477621956723&p1=&p1=2&p1=null  
+  
+clientSecret：`f6848af3e8a4fcaba2b3911f4da7a7c5` 
+  
+下面开始构造Signature签名：  
+    
+第1步：将所有参数名按字典顺序升序排列，排序结果为：city,companyId,p1,timestamp,userCode,zone。   
 
-city=230&companyId=12&p1=,2,null&timestamp=1477621956723&userCode=892312302&zone=test,dev&client_secret=f6848af3e8a4fcaba2b3911f4da7a7c5
-2. 下面开始构造Signature签名：  
-    第1步：将所有参数按key进行字典升序排列，排列结果为：city,companyId,p1,timestamp,userCode,zone。   
-    第2步：将第1步中排序后的参数(key=value)用&拼接起来，多个参数值以逗号隔开，拼接一起：
-``` http
+第2步：将第1步排序后的参数以`参数名=参数值`(key=value)的格式、以`&`拼接起来。多个参数值，参数值之间以逗号隔开。  
+
+``` json
 city=230&companyId=12&p1=,2,null&timestamp=1477621956723&userCode=892312302&zone=test,dev
 ```
 参数p1有三个值：””、”2”、”null”，拼接起来后：”,2,null”。  
 
-第3步：将clientSecret的值拼接在第二步生成的字符串中，参数名为client_secret:
-```
+第3步：将clientSecret的值追加在在第二步生成的字符串后，参数名为client_secret:
+``` json
 city=230&companyId=12&p1=,2,null&timestamp=1477621956723&userCode=892312302&zone=test,dev&client_secret=f6848af3e8a4fcaba2b3911f4da7a7c5
 ```
 第4步：对第3步生成的字符串进行MD5加密，即为signature的值。
-``` http
+``` json
 MD5(city=230&companyId=12&p1=,2,null&timestamp=1477621956723&userCode=892312302&zone=test,dev&client_secret=f6848af3e8a4fcaba2b3911f4da7a7c5) = 2946ad157e140bfb134197403b42ca42
 ```
   
-3. 发送实际请求
-   ``` http
-  https://oroute.dooioo.com/loupan/server/v1/resblock?userCode=892312302&companyId=12&city=230&zone=test&zone=dev&timestamp=1477621956723&p1=&p1=2&p1=null&signature=d&signature=2946ad157e140bfb134197403b42ca42
+第5步：发送实际请求
+``` json
+https://oroute.dooioo.com/loupan/server/v1/resblock?  
+userCode=892312302&companyId=12&city=230&zone=test&zone=dev&timestamp=1477621956723  
+&p1=&p1=2&p1=null&signature=2946ad157e140bfb134197403b42ca42
   
- Authorization: Bearer xdfw3dv3sdsdfawqozfjefqweqwr
-   ```  
+Authorization: Bearer xdfw3dv3sdsdfawqozfjefqweqwr
+```  
   
 
 
