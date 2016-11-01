@@ -30,4 +30,5 @@ bui #Summary
 * [SPI 实现： Server](parts/chapter3/server-pom.md)
 	* [Spring Java Config](parts/chapter3/java-config.md)
 	* [登录迁移指南](parts/chapter3/login-migration.md)
-	
+* [常用组件](parts/chapter4/overview.md)
+	* [分布式Job](parts/chapter4/distributed-job-component.md)
