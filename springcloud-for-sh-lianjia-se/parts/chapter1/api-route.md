@@ -439,6 +439,7 @@ API网关响应如下：
 #### 静态路由可能导致Nginx IP Hash流量到单节点
 原因是经过API网关的静态路由请求，请求最终到达Nginx后，Nginx IP Hash默认是以客户端IP为准，此时客户端IP已变更为网关的服务器IP，由于网关服务器IP都是连续的，导致IP Hash到原始服务器的单个节点上。
 
+
 #### 静态路由可能会添加多次’X-Forwarded-For’ Header。
 主要原因是，静态路由通过域名访问后端服务，会多次经过Nginx，这样获取客户端IP时，如果通过 ‘X-Forwarded-For’获取客户端IP时会取到多个IP值。
 #### 字符编码
