@@ -143,20 +143,6 @@ refresh_token:708ccc3a1b5ee331ef12d36cf925ecee
 断路器开启后，`5秒`（时间窗口）内不转发请求给后台服务。
 
 ### OAuth Server实时流量监控
-#### 获取管理接口的Token
-由于OAuth Server部署在外网，出于安全考虑，监控接口都增加了请求参数：`token`。
-该参数值可通过接口获取：[OAuth2认证服务 - token (获取管理接口的token)
-](http://api.doc.dooioo.org/v1/doc/212240510/2696765699/4004481326)
-
-接口请求头：`X-Role-Id`只有OAuth Server负责人知晓，有需要的的同学
-可钉钉私聊。
-
-接口响应示例：
-``` text
- d571c0ci249d9fb5cc3e7cdd82e0317a410xzqemzswalewca
-```
-
-#### 打开Turbine监控
 
 打开Turbine监控页面：[http://turbine.se.dooioo.com](http://turbine.se.dooioo.com)，如下图所示：  
 
@@ -164,7 +150,7 @@ refresh_token:708ccc3a1b5ee331ef12d36cf925ecee
 
 将以下连接复制到上图所示的输入框：
 ``` http
- http://oroute.dooioo.com:16099/manage/hystrix.stream?token=d571c0ci249d9fb5cc3e7cdd82e0317a410xzqemzswalewca
+ http://oroute.dooioo.com:16099/admin/hystrix.stream
 ```  
   
 点击按钮：monitor stream，即可查看实时流量，如下图所示：
@@ -176,7 +162,8 @@ refresh_token:708ccc3a1b5ee331ef12d36cf925ecee
 
 #### 注意事项
 通过以上方法只能查看OAuth Server单个节点的实时流量，新版本会废弃。
-另外，管理接口生成的Token有效期为1小时，也就是说只能查看1小时的实时流量，token过期则需重新申请。
+
+另外，实时流量监控仅限内网访问。
 
 ### 调试指南
 当某个接口请求异常时，如何定位问题？  
