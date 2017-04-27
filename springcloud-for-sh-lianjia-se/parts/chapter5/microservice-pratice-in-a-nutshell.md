@@ -1,15 +1,5 @@
+<!-- toc -->
 ## Since 2010
-涉及的技术栈：
-Java Platform，
-Tomcat ，
-Spring Framework，
-IBatis/MyBatis,
-Memcache,
-ActiveMQ,
-Solr,
-SQL Server(Master/Slave),
-Linux OS
-
 典型项目结构：
 * Model
 * View(jsp/freemarker/html)

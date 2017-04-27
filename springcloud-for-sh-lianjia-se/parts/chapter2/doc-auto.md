@@ -6,7 +6,7 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
 		<plugin>
 				<groupId>com.dooioo.se.lorik</groupId>
 				<artifactId>maven-apidoc-plugin</artifactId>
-				<version>1.0.4</version>
+				<version>1.0.5</version>
 				<extensions>true</extensions>
 				<configuration>
 					<options>-appName "${project.name}"</options>
@@ -48,6 +48,33 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
   
 -version   
 	默认版本号，内置默认版本号：v0，示例： -version v1  
+	
+-forceLogin  
+  开启强制登录，默认情况下，微服务所有接口都是需要登录的，只有使用```@LoginNeedless```注解的方法才无需登录，而普通SpringMVC项目的RestController则默认是不需要登录的，这对于开放给其他项目的对外接口来说，存在安全隐患；  
+  
+生成文档时，指定此选项，普通Spring MVC的接口也会提示需要登录，无需登录的接口，请设置-loginNeedless选项；  
+  
+示例：  -forceLogin  
+  
+适用v1.0.5及以上；
+  
+ -loginNeedless  
+  
+生成文档时，对于接口是否登录的判断，默认是检查方法是否包含类名为：```com.dooioo.se.lorik.spi.view.authorize.LoginNeedless```的注解，对于非微服务的其他项目来说，标识无需登录的注解可能是其他类名，客户端可使用此选项覆盖默认行为；  
+  
+示例：  -loginNeedless com.lianjia.sh.jiaoyi.interceptor.LoginNeedless  
+  
+适用v1.0.5及以上；
+ 
+-strictMode  
+  
+开启严格模式，默认情况下，所有没使用@nodoc注释的类都会被导出，当开启严格模式时，仅限使用@apidoc注释的类才会生成文档；   
+  
+注意，@apidoc仅适用于类级别的注释   
+  
+示例： -strictMode    
+  
+适用v1.0.5及以上  
   
 -exportTo  
 	解析后的数据导出到那个接口，默认值为：http://api.doc.dooioo.org/v1/restapps/import/binary。  
@@ -68,7 +95,7 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
 		<plugin>
 				<groupId>com.dooioo.se.lorik</groupId>
 				<artifactId>maven-apidoc-plugin</artifactId>
-				<version>1.0.4</version>
+				<version>1.0.5</version>
 				<extensions>true</extensions>
 				<configuration>
 					<options>
@@ -77,6 +104,9 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
 					   -packages.exclude com.lianjia.sh.se.loupan.spi.core:com.lianjia.sh.se.loupan.spi.search
 					   -print true  -version v1 
 					   -ignoreVirtualPath true
+					   -strictMode
+					   -forceLogin 
+					   -loginNeedless com.lianjia.sh.jiaoyi.interceptor.LoginNeedless
 					</options>
 				</configuration>
 		</plugin>
@@ -92,7 +122,7 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
               <id>central</id>
               <name>Maven2</name>
                 <!— 公司私服地址 —>
-              <url>http://nexus.dooioo.org/nexus/content/groups/public</url>
+              <url>http://nexus.dooioo.cn/repository/public</url>
               <layout>default</layout>
               <snapshots>
                 <enabled>true</enabled>
@@ -105,15 +135,12 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
 ```
 
 ### 注释要求
-**更新：**
-**如果整个类无需生成文档，可在类上添加javadoc注释：@nodoc;
-如果类中某个方法无需生成文档，可在方法上添加javadoc注释：@nodoc**
-
 源代码的注释必须符合我们的要求：
 ``` java
 /**
  * 客户端调用的房屋登盘申请SPI
  * @nodoc  //此类不生成文档
+ * @apidoc //当开启stricMode时，使用apidoc注释的类才会生成文档；
  * @summary 房屋登盘申请
  * @Copyright (c) 2016, Lianjia Group All Rights Reserved.
  */
@@ -176,10 +203,15 @@ public interface HouseRegisterApplySpi {
 	<plugin>
 		 <groupId>com.dooioo.se.lorik</groupId>
 		 <artifactId>maven-apidoc-plugin</artifactId>
-		 <version>1.0.4</version>
+		 <version>1.0.5</version>
 		 <extensions>true</extensions>
 		 <configuration>
 			<options>-app "you-app（API网关的虚拟路径）” -appName "${project.name}"</options>
 		</configuration>
 	</plugin>
 ```
+
+
+### 高级功能
+#### 覆盖默认的访问域名api.route.dooioo.com
+#### 自定义每个方法输出的示例JSON串
