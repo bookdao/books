@@ -32,5 +32,6 @@ bui #Summary
 	* [登录迁移指南](parts/chapter3/login-migration.md)
 * [常用组件](parts/chapter4/overview.md)
 	* [分布式Job](parts/chapter4/distributed-job-component.md)
+	* [微服务Server实时流量监控](parts/chapter4/hystrix-controller-metrics-component.md)
 * [In-a-nutshell](parts/chapter5/overview.md)
 	* [不实战](parts/chapter5/microservice-pratice-in-a-nutshell.md)	
