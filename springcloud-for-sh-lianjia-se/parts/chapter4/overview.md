@@ -3,6 +3,8 @@
    如何透明地支持Spring `@Schedule` Task 的分布式调度？有哪些依赖jar？ 
  * [微服务实现方实时流量监控](./hystrix-controller-metrics-component.html)  
    如何查看和支持服务实现方的实时流量？  
+ * [其他项目接入微服务体系](./dummy-eureka-client.html)  
+   非微服务项目如何访问微服务接口？
  
 
     

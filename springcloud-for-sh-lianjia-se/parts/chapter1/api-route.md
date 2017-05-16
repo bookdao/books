@@ -417,7 +417,7 @@ serviceId默认为API网关。
 而经过API网关路由的请求会自动添加Response Header: `X-Route-By`。
 
 这两个Header的值即节点IP的加密值，开发人员可通过接口解密：[API网关 - 管理支持 (查询X-Instance-Id对应的IP)
-](http://api.doc.dooioo.org/v1/doc/3100800167/194699906/427734797)
+](http://api.doc.dooioo.org/v1/doc/3100800167/194699906/226772003)
 
 通过`X-Instance-Id`、`X-Route-By`开发人员可以判断请求是否到达API网关、是否到达服务接口以及那个节点响应了客户端请求。
 
