@@ -12,12 +12,12 @@
 * 透明地接管基于`xml配置`、`@Scheduled`注解实现的Spring定时任务。
 * 目前不支持使用原生`Quartz`实现的定时任务。
 
-### Maven依赖
+### Maven依赖(支持cn环境)
 ```xml  
 	<dependency>
-		<groupId>com.lianjia.sh</groupId>
-		<artifactId>se.tools.quartz-toc</artifactId>
-		<version>0.2.1</version>
+			<groupId>com.lianjia.sh.se.tools</groupId>
+			<artifactId>se-quartz-toc</artifactId>
+			<version>0.3.3</version>
 	</dependency>
 ```
 
@@ -62,7 +62,7 @@ public class ApplicationStat {
 
 
 ### 监控：任务查看
-大家可访问：[分布式任务监控 - 简陋版](http://10.22.15.2:19900/triggers "简陋版") 查看所有系统被托管的定时任务的运行状况、运行历史等，目前不提供变更操作。  
+大家可访问：[分布式任务监控 - 简陋版](http://job.dooioo.com/triggers "简陋版") 查看所有系统被托管的定时任务的运行状况、运行历史等，目前不提供变更操作。  
   
 ![简陋版 任务查看]({{book.imagePath}}/parts/chapter4/images/triggers_page.png)
 
