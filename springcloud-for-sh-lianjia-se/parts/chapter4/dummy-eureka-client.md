@@ -13,7 +13,7 @@ Hi，boys，为了简化非微服务应用接入微服务体系，我们开发�
  		<dependency>
 			<groupId>com.lianjia.sh.se</groupId>
 			<artifactId>dummy-eureka-client</artifactId>
-			<version>0.8.1</version>
+			<version>0.8.2</version>
 		</dependency>
  ```
 
