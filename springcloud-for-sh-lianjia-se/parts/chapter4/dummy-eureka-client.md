@@ -13,7 +13,7 @@ Hi，boys，为了简化非微服务应用接入微服务体系，我们开发�
  		<dependency>
 			<groupId>com.lianjia.sh.se</groupId>
 			<artifactId>dummy-eureka-client</artifactId>
-			<version>0.8.2</version>
+			<version>0.8.3</version>
 		</dependency>
  ```
 
@@ -79,5 +79,17 @@ SpringBoot和SpringCloud项目都会有此配置，老Tomcat项目通常来说�
 #### 负载均衡
 组件从多个节点中选择服务节点的策略是：轮询。
 
-
+#### app
+ DiscoveryClient的属性app推荐命名规范为：小写字母，多个单词之间'-'连接。
+ 例如： `fy-old-server`，`old-login-ui`，`ky-old-server`，`shouhou-serve`
  
+ app作为作为服务的唯一标识，必须保证全局唯一。
+ 
+ 默认情况下，所有app都会自动追加前缀：`overseas-`。
+ 
+ 假设你配置的app为`fy-old-server`，实际上注册到服务发现的服务名为：`overseas-fy-old-server`。
+ 
+ 因此老项目之间调用时应该为：`this.discoveryClient.findNextServer("overseas-fy-old-server");`
+ 
+#### env
+  DiscoveryClient的属性env目前仅限：development，test，integration，production，大小写敏感。

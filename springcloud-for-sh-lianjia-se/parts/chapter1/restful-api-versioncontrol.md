@@ -43,10 +43,10 @@ API升级时三种策略开销对比图（X轴表示API有多少个版本，Y轴
 
 ##### 版本号是请求路径的一部分  
 
-```GET  http://api.route.dooioo.org/v1/client/token```
+```GET  http://api.route.dooioo.cn/v1/client/token```
 ##### 版本号是查询参数的一部分    
 
-```GET  http://api.route.dooioo.org/client/token?version=1```
+```GET  http://api.route.dooioo.cn/client/token?version=1```
 
 这两种方式的优点是：很容易在浏览器里查看不同版本API的输出。
 不足之处是：版本号在URI中破坏了REST的HATEOAS（hypermedia as the engine of application state）规则，版本号和资源之间并无直接关系。
@@ -55,7 +55,7 @@ API升级时三种策略开销对比图（X轴表示API有多少个版本，Y轴
 客户端在发送请求的时候，需要一起发送自定义的Request Header，比如： X-Api-Version或Accept-Version，来指明请求那个版本的接口。
 
 ``` http
-GET http://api.route.dooioo.org/client/token
+GET http://api.route.dooioo.cn/client/token
 X-Api-Version: 1
 ```
 #### 利用ContentType
@@ -68,7 +68,7 @@ ContentType组成：```Content-Type := type "/" subtype *[";" parameter] ```
 版本号是ContentType sub type的一部分。
 
 ``` http
- GET http://api.route.dooioo.org/client/token  
+ GET http://api.route.dooioo.cn/client/token  
  Accept: application/vnd.dooioo.v2+json    
 ```  
 vnd = Vendor (The "vnd" prefix means that the MIME value is vendor specific.)
@@ -77,7 +77,7 @@ vnd = Vendor (The "vnd" prefix means that the MIME value is vendor specific.)
 将版本号从MIME的sub type里分离出来，当成MIME的一个参数。
   
 ``` http
-  GET http://api.route.dooioo.org/client/token  
+  GET http://api.route.dooioo.cn/client/token  
   Accept: application/vnd.dooioo+json;version=2  
 ```
 更多Accept例子：  

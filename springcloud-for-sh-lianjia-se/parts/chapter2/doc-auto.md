@@ -6,7 +6,7 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
 		<plugin>
 				<groupId>com.dooioo.se.lorik</groupId>
 				<artifactId>maven-apidoc-plugin</artifactId>
-				<version>1.0.5</version>
+				<version>1.0.5.3</version>
 				<extensions>true</extensions>
 				<configuration>
 					<options>-appName "${project.name}"</options>
@@ -19,7 +19,7 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
    
 然后运行Maven 命令： `mvn apidoc` 即可。
 
-源代码的解析是由lorik-apidoclet-1.0.4.jar负责的，解析后的数据自动导入到：[http://api.doc.dooioo.org](http://api.doc.dooioo.org)。
+源代码的解析是由lorik-apidoclet-1.0.4.jar负责的，解析后的数据自动导入到：[http://api.doc.dooioo.cn](http://api.doc.dooioo.cn)。
 
 ### 插件支持的选项
  -packages.exclude   
@@ -77,7 +77,7 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
 适用v1.0.5及以上  
   
 -exportTo  
-	解析后的数据导出到那个接口，默认值为：http://api.doc.dooioo.org/v1/restapps/import/binary。  
+	解析后的数据导出到那个接口，默认值为：http://api.doc.dooioo.cn/v1/restapps/import/binary。  
 	  示例：-exportTo http://balabala.domain.com/v1/binary  
   
 -ignoreVirtualPath  
@@ -95,7 +95,7 @@ API文档是根据Java源代码的注释自动生成，Maven项目（SPI模块�
 		<plugin>
 				<groupId>com.dooioo.se.lorik</groupId>
 				<artifactId>maven-apidoc-plugin</artifactId>
-				<version>1.0.5</version>
+				<version>1.0.5.3</version>
 				<extensions>true</extensions>
 				<configuration>
 					<options>
@@ -213,5 +213,41 @@ public interface HouseRegisterApplySpi {
 
 
 ### 高级功能
-#### 覆盖默认的访问域名api.route.dooioo.com
-#### 自定义每个方法输出的示例JSON串
+#### 覆盖默认的访问域名以及自定义每个方法输出的示例JSON串
+在项目根路径（跟pom.xml平级）提供apidoclet.json文件，格式如下：
+``` json
+{
+ "env":{
+   "headers":["环境","内网访问域名","外网访问域名"],
+   "rows":[["正式环境","http://api.route.dooioo.com","https://oroute.dooioo.com"],
+   ["集成环境	","http://api.route.dooioo.cn","https://oroute.dooioo.cn"],
+   ["测试环境	","http://api.route.dooioo.net"]]
+ },
+ "com.lianjia.sh.se.login.spi.core.EmployeeLoginSpi.loginV1.returnJson":  {
+   "loginStatus":0,
+   "userCode":0,
+   "userName":"用户名",
+   "companyId":0,
+   "createAt":0,
+   "expiredIn":0,
+   "loginTicket":"客户端持有的ticket,sso验证凭证",
+   "lastAccessAt":0
+  },
+  "com.lianjia.sh.se.login.spi.core.EmployeeLoginSpi.findLoginedEmployeeAndRefreshTicketV1.returnJson":  {
+   "loginStatus":0,
+   "userCode":0,
+   "userName":"用户名",
+   "companyId":0,
+   "createAt":0,
+   "expiredIn":0,
+   "loginTicket":"客户端持有的ticket,sso验证凭证",
+   "lastAccessAt":0
+  },
+  "com.lianjia.sh.se.login.spi.core.EmployeeLoginSpi.checkAndRefreshLoginTicketV1.returnJson":  {
+   "status":0,
+   "message":"登录状态的描述信息",
+  }
+
+
+}
+```

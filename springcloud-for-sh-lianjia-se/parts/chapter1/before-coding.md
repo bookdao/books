@@ -39,7 +39,7 @@
  
 ``` java
 	RemoteRequest  
-	.to(“http://api.route.dooioo.org/loupan/server/v1/city/{id}”)
+	.to(“http://api.route.dooioo.cn/loupan/server/v1/city/{id}”)
     .withParam("id",3).get(City.class);
 ```
 比如，有时候使用静态内部类（接口），也可使代码更可读：
@@ -119,8 +119,8 @@ public interface DistrictSpi{
 
 *   ```@LorikRest```     
 
-	可以配置此方法通过API网关（api.route.dooioo.org)访问时的一些REST特性和业务码。  
-比如：```@LorikRest(value={Feature.NullTo404},codes={20010,20020})```，可理解为通过API网关（api.route.dooioo.org)访问时，如果此方法返回结果为null，则统一响应为404；codes指明此方法可能抛出的业务错误码。  
+	可以配置此方法通过API网关（api.route.dooioo.cn)访问时的一些REST特性和业务码。  
+比如：```@LorikRest(value={Feature.NullTo404},codes={20010,20020})```，可理解为通过API网关（api.route.dooioo.cn)访问时，如果此方法返回结果为null，则统一响应为404；codes指明此方法可能抛出的业务错误码。  
 非必须，如果方法实现会抛出业务错误码，则需显式在方法上声明。业务码对应接口文档的业务码说明。
 
 新增了个doc tag: @summary。

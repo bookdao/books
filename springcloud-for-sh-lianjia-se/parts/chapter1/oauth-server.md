@@ -9,7 +9,7 @@
 ### OAuth Server - 部署在外网的API网关
 我们的OAuth Server目前仅支持OAuth2协议，访问域名：
 * 正式环境：https://oroute.dooioo.com  
-* 集成环境：https://oroute.dooioo.net  
+* 集成环境：https://oroute.dooioo.cn  
 * 暂不支持测试环境。
 
 OAuth Server的功能类似API网关，不过它认证的是客户端的身份，客户端不登记不申请签证（`access_token`）就不能入境（访问内网接口），而API网关认证的是请求接口的员工（`x-token`)，它要确保授权接口的确是该员工访问的，无法抵赖（因为x-token是根据工号和密码申请的）。
@@ -34,10 +34,10 @@ OAuth Server的功能类似API网关，不过它认证的是客户端的身份�
 调用任何接口（入境）之前，必须通过ClientId和ClientSercret(护照)申请签证 - Access Token。
 
 下面我演示集成环境如何通过OAuth Server访问楼盘接口：
- `https://oroute.dooioo.net/loupan/server/v1/citys`
+ `https://oroute.dooioo.cn/loupan/server/v1/citys`
 #### 1. 通过护照（clientId和clientSecret）申请access_token  
 详细的接口文档，请参考：[OAuth2认证服务 - token (申请Token)
-](http://api.doc.dooioo.org/v1/doc/212240510/2696765699/2081483726)。  
+](http://api.doc.dooioo.cn/v1/doc/212240510/2696765699/2230599566)。  
 注意事项：  
 1. `接口参数必须放在Request Body里，以Form表单的方式提交,Url参数会泄露clientId和clientSecret` 
 2. 请尽量将接口升级到签名校验的版本，签名计算规则，请参考章节：[注意事项](#%E6%89%80%E6%9C%89%E6%8E%A5%E5%8F%A3%E5%B0%86%E5%BC%BA%E5%88%B6%E6%A3%80%E6%9F%A5%E7%AD%BE%E5%90%8D%E5%8F%82%E6%95%B0signature)。
@@ -45,20 +45,15 @@ OAuth Server的功能类似API网关，不过它认证的是客户端的身份�
 代码示例：
 ``` http
 # Http Header
-Request URL:https://oroute.dooioo.net/oauth/token
+Request URL:https://oroute.dooioo.cn/v2/oauth/token
 Request Method:POST
 Content-Type:application/x-www-form-urlencoded
 
-#Request Body - Form 表单
+#Request Body - Form 表单 #签名校验版本，禁止传递秘钥
 grant_type:client_credentials
-client_id: andriod_app
-client_secret:f60zc3ndf1f80ac3e8a4fcavbaacn91vmf4dad7a7c5
-
-#需要校验签名的版本，不需要传递clientSecret
-#grant_type:client_credentials
-#client_id:andriod_app
-#timestamp:134523332432544
-#signature:dsfs3sdsfsdsqsdsfdf3sdwerferdfdsfwfw
+client_id:andriod_app
+timestamp:134523332432544
+signature:dsfs3sdsfsdsqsdsfdf3sdwerferdfdsfwfw
 ```
 接口响应数据如下：
 ``` json
@@ -81,7 +76,7 @@ client_secret:f60zc3ndf1f80ac3e8a4fcavbaacn91vmf4dad7a7c5
 代码示例:  
 ``` http
 #Http Header
-Request URL:https://oroute.dooioo.net/loupan/server/v1/citys
+Request URL:https://oroute.dooioo.cn/loupan/server/v1/citys
 Request Method:GET
 #每次接口请求必须设置Authorization请求头
 Authorization: Bearer 40d77f7f5bc6152092e49464294077bc
@@ -103,19 +98,15 @@ Authorization: Bearer 40d77f7f5bc6152092e49464294077bc
 代码示例：
 ``` http
 # Http Header
-Request URL:https://oroute.dooioo.net/oauth/token
+Request URL:https://oroute.dooioo.cn/v2/oauth/token
 Request Method:POST
 Content-Type:application/x-www-form-urlencoded
 
-#Request Body - Form 表单
+#Request Body - Form 表单 #签名校验版本，禁止传递秘钥
 grant_type:refresh_token
-refresh_token:708ccc3a1b5ee331ef12d36cf925ecee
-
-#签名校验版本
-#grant_type:refresh_token
-#referesh_token:708ccc3a1b5ee331ef12d36cf925ecee
-#timestamp:134532324359023
-#signature:xsdf23daqazdfdfree2sfsfefeferewr
+referesh_token:708ccc3a1b5ee331ef12d36cf925ecee
+timestamp:134532324359023
+signature:xsdf23daqazdfdfree2sfsfefeferewr
 ```
 
 接口会返回新的access_token：
@@ -175,12 +166,12 @@ refresh_token:708ccc3a1b5ee331ef12d36cf925ecee
 默认情况下，所有的微服务接口都会自动添加Response Header: `X-Instance-Id`；  
 
 这些Header的值即节点IP的加密值，开发人员可通过接口解密：[API网关 - 管理支持 (查询X-Instance-Id对应的IP)
-](http://api.doc.dooioo.org/v1/doc/3100800167/194699906/427734797)
+](http://api.doc.dooioo.cn/v1/doc/3100800167/194699906/226772003)
 
 通过`X-Authorize-By`、`X-Route-By`、`X-Instance-Id`，开发人员可以判断请求是否到达OAuth Server、API网关、原始服务接口以及那些节点响应了客户端请求。
 
 
-下图是使用Postman向我们的OAuth Server`https://oroute.dooioo.net` 发起的一个请求: 
+下图是使用Postman向我们的OAuth Server`https://oroute.dooioo.cn` 发起的一个请求: 
 
 ![OAuth Server请求头]({{book.imagePath}}/parts/chapter1/images/oroute_header.png)  
   
@@ -190,7 +181,7 @@ refresh_token:708ccc3a1b5ee331ef12d36cf925ecee
 ### 注意事项
 #### 集成环境OAuth Server的Https证书无效  
 
-由于我们集成环境OAuth Server域名：[https://oroute.dooioo.net](https://oroute.dooioo.net)没有申请Https证书，Chrome Postman App首次访问接口时无法建立https连接，需要复制域名，在浏览器里手动确认信任此Https链接，如下图：  
+由于我们集成环境OAuth Server域名：[https://oroute.dooioo.cn](https://oroute.dooioo.cn)没有申请Https证书，Chrome Postman App首次访问接口时无法建立https连接，需要复制域名，在浏览器里手动确认信任此Https链接，如下图：  
 
 ![Invalid Https CA]({{book.imagePath}}/parts/chapter1/images/invalid_https_ca.png) 
 

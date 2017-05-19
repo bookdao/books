@@ -1,7 +1,7 @@
 <!-- toc -->
 
 ### 认证
-所有接口文档（[http://api.doc.dooioo.org/doc](http://api.doc.dooioo.org/doc)）中出现***需要授权***的Label时，接口请求都必须传递Http Request Header: `X-Token`。
+所有接口文档（[http://api.doc.dooioo.cn/doc](http://api.doc.dooioo.cn/doc)）中出现***需要授权***的Label时，接口请求都必须传递Http Request Header: `X-Token`。
 
 ![Login Label]({{book.imagePath}}/parts/chapter1/images/login_label.png)
 
@@ -11,7 +11,7 @@ API网关负责统一认证，所谓认证，是指调用SSO登录服务验证`X
 
 `X-Token`可通过工号和密码调用SSO登录接口获得，接口响应的`loginTicket`即`X-Token`的值，具体接口文档请参考：
 [SSO登录服务 - 员工登录 (员工登录)
-](http://api.doc.dooioo.org/v1/doc/3606983534/3255124964/1626426016)
+](http://api.doc.dooioo.cn/v1/doc/3606983534/3255124964/1626426016)
 
 注意事项：
 * 多次调用SSO登录接口时，如果`Source`相同，则旧的loginTicket会失效，`30分钟`内`旧loginTicket`会提示重复登录或者登录状态异常。
@@ -28,7 +28,7 @@ $.ajax({
     xhrFields: {
       withCredentials: true
    },
-   url:'http://api.route.dooioo.org/loupan/management/server/v1/organization/coordinates/paginate?orgId=&pageNo=1&pageSize=20',
+   url:'http://api.route.dooioo.cn/loupan/management/server/v1/organization/coordinates/paginate?orgId=&pageNo=1&pageSize=20',
    dataType:'json'
    })
    .done(function( data ) {
@@ -99,7 +99,7 @@ API网关是访问机房服务的桥梁，而能否访问某个服务，则取�
 ##### 添加静态路由
 测试和集成环境，开发和测试人员可自由添加静态路由，方便调试。  
 接口说明文档请参考：[API网关 - 管理支持 (新增或更新静态路由)
-](http://api.doc.dooioo.org/v1/doc/3100800167/194699906/292285745)
+](http://api.doc.dooioo.cn/v1/doc/3100800167/194699906/292285745)
 
 此接口需要Header参数：`X-Role-Id`，测试和集成环境有效值为：admin。
 `path`参数即虚拟路径，`location`为服务访问的域名。
@@ -109,7 +109,7 @@ API网关是访问机房服务的桥梁，而能否访问某个服务，则取�
 #### 查询可用路由
 开发和测试人员可通过接口： [http://api.route.dooioo.com/admin/routes.json](http://api.route.dooioo.com/admin/routes.json) ，查询当前可用路由信息。
 
-集成环境将.com调整为.org，测试环境将.com调整为.net。
+集成环境将.com调整为.cn，测试环境将.com调整为.net。
 
 ### SpringMVC&SpringBoot项目接入API网关
 
@@ -341,7 +341,7 @@ API网关支持CORS规范，IE10、Chrome、FireFox、Safari浏览器可直接�
 
 #### Origin的限制
 跨域请求都会设置Http请求头：`Origin`，有效值为发起跨域请求的主机域名。
-目前我们支持的域名后缀：测试环境=dooioo.net，集成环境=dooioo.org，生产环境=dooioo.com。
+目前我们支持的域名后缀：测试环境=dooioo.net，集成环境=dooioo.cn，生产环境=dooioo.com。
 
 ### 超时、重试、断路器机制
 #### 超时
@@ -362,11 +362,11 @@ API网关支持CORS规范，IE10、Chrome、FireFox、Safari浏览器可直接�
 断路器开启后，`5秒`（时间窗口）内不转发请求给后台服务。
 
 ### 测试
-测试人员可通过API文档中心（[http://api.doc.dooioo.org/doc](http://api.doc.dooioo.org/doc)： 服务- 导入到Postman - API网关简单测试，将服务接口导入Postman Chrome App，请不要手动输入接口。
+测试人员可通过API文档中心（[http://api.doc.dooioo.cn/doc](http://api.doc.dooioo.cn/doc)： 服务- 导入到Postman - API网关简单测试，将服务接口导入Postman Chrome App，请不要手动输入接口。
 
 下面我演示如何将楼盘字典核心接口导入Postman：  
 #### 访问API文档中心
- 访问API文档中心（[http://api.doc.dooioo.org/doc](http://api.doc.dooioo.org/doc)，找到楼盘字典核心服务，点击展开 ，选择导出到Postman。  
+ 访问API文档中心（[http://api.doc.dooioo.cn/doc](http://api.doc.dooioo.cn/doc)，找到楼盘字典核心服务，点击展开 ，选择导出到Postman。  
 ![apidoc loupan]({{book.imagePath}}/parts/chapter1/images/api_doc_loupan_core.png)
 
 #### 复制API网关简单测试里的链接 
@@ -381,7 +381,7 @@ API网关支持CORS规范，IE10、Chrome、FireFox、Safari浏览器可直接�
 #### API网关实时流量监控
 API网关实时流量查看：[http://turbine.se.dooioo.com/monitor](http://turbine.se.dooioo.com/monitor)。  
   
-集成环境将com更换为org，测试环境暂不提供此功能。
+集成环境将com更换为cn，测试环境暂不提供此功能。
 
 监控指标说明：  
 
@@ -417,7 +417,7 @@ serviceId默认为API网关。
 而经过API网关路由的请求会自动添加Response Header: `X-Route-By`。
 
 这两个Header的值即节点IP的加密值，开发人员可通过接口解密：[API网关 - 管理支持 (查询X-Instance-Id对应的IP)
-](http://api.doc.dooioo.org/v1/doc/3100800167/194699906/226772003)
+](http://api.doc.dooioo.cn/v1/doc/3100800167/194699906/226772003)
 
 通过`X-Instance-Id`、`X-Route-By`开发人员可以判断请求是否到达API网关、是否到达服务接口以及那个节点响应了客户端请求。
 

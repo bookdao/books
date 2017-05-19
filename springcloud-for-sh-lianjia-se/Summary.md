@@ -28,12 +28,14 @@ bui #Summary
 	* [接口安全性](parts/chapter2/spi-security.md)
 	* [API文档自动生成](parts/chapter2/doc-auto.md)
 * [SPI 实现： Server](parts/chapter3/server-pom.md)
-	* [Spring Java Config](parts/chapter3/java-config.md)
 	* [登录迁移指南](parts/chapter3/login-migration.md)
+	* [Spring Java Config](parts/chapter3/java-config.md)
+	* [Spring Boot/Cloud进阶](parts/chapter3/springboot-promotion.md)
+	
 * [常用组件](parts/chapter4/overview.md)
 	* [分布式Job](parts/chapter4/distributed-job-component.md)
 	* [微服务Server实时流量监控](parts/chapter4/hystrix-controller-metrics-component.md)
 	* [老项目接入微服务体系](parts/chapter4/dummy-eureka-client.md)
 	
 * [In-a-nutshell](parts/chapter5/overview.md)
-	* [不实战](parts/chapter5/microservice-pratice-in-a-nutshell.md)	
+	* [微服务之abc](parts/chapter5/microservice-pratice-in-a-nutshell.md)	
