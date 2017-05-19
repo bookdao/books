@@ -24,12 +24,12 @@ Hi，boys，为了简化非微服务应用接入微服务体系，我们开发�
 <!-- 老项目都会配置个placeholder，自动将环境保存成env变量 或者SpringBoot项目使用spring.profiles.active -->
 <bean
 		class="com.lianjia.sh.se.dummy.eureka.client.discovery.DiscoveryClient">
-		<property name="env" value="${env}"></property>
+		<property name="env" value="${env}" />
 		<!-- spring boot也可以使用spring.profiles.active
-		<property name="env" value=“${spring.profiles.active}”></property>
+		<property name="env" value="${spring.profiles.active}"/>
 		-->
 		<!-- 当前应用的标识，注意，不同应用应该使用不同的app，要保持全局唯一，只允许字母数字和连字符 -->
-		<property name="app" value=“jiaoyi-old-server”></property>
+		<property name="app" value="jiaoyi-old-server"/>
 	</bean>
 	
 ``` 
