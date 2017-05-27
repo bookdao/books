@@ -346,7 +346,7 @@ SPI调用
  //按Rest语义来说，此处应该返回404：没有找到该资源，
  //而不是status=200，表示资源存在。
  $.get( 
-	”http://api.route.dooioo.com/loupan/server/v1/bizcircle/2000”  
+	”http://aroute.dooioo.com/loupan/server/v1/bizcircle/2000”  
 	);
 ```
 

@@ -28,7 +28,7 @@ $.ajax({
     xhrFields: {
       withCredentials: true
    },
-   url:'http://api.route.dooioo.cn/loupan/management/server/v1/organization/coordinates/paginate?orgId=&pageNo=1&pageSize=20',
+   url:'http://aroute.dooioo.cn/loupan/management/server/v1/organization/coordinates/paginate?orgId=&pageNo=1&pageSize=20',
    dataType:'json'
    })
    .done(function( data ) {
@@ -107,7 +107,7 @@ API网关是访问机房服务的桥梁，而能否访问某个服务，则取�
 生产环境的静态路由，请在上线之前钉钉发给我。
 
 #### 查询可用路由
-开发和测试人员可通过接口： [http://api.route.dooioo.com/admin/routes.json](http://api.route.dooioo.com/admin/routes.json) ，查询当前可用路由信息。
+开发和测试人员可通过接口： [http://aroute.dooioo.com/admin/routes.json](http://api.aroute.dooioo.com/admin/routes.json) ，查询当前可用路由信息。
 
 集成环境将.com调整为.cn，测试环境将.com调整为.net。
 
@@ -128,7 +128,7 @@ API网关是访问机房服务的桥梁，而能否访问某个服务，则取�
  之前Ajax或Postman里的接口请求地址：  
 `http://fang.dooioo.com/api/v2/house/1234`  
 通过API网关访问时调整成：  
-`http://api.route.dooioo.com/fy/old/server/api/v2/house/1234`     
+`http://aroute.dooioo.com/fy/old/server/api/v2/house/1234`     
 
 5. 服务端程序调用房源接口时，通过应用的域名访问：`http://fang.dooioo.com/api/v2/house/1234`。  
 
@@ -158,16 +158,16 @@ API网关是访问机房服务的桥梁，而能否访问某个服务，则取�
 
 	* 如果有Web页面访问此接口，找API网关的项目负责人，添加应用的静态路由，并告知Web页面调用方新的接口路径。  
 	  比如你应用的静态路由：/loupan/xiaoqu/server => http://xiaoqu.dooioo.com，
-	   则页面请求路径调整为：http://api.route.dooioo.com/loupan/xiaoqu/server/api/house/v2/nearby 。 
+	   则页面请求路径调整为：http://aroute.dooioo.com/loupan/xiaoqu/server/api/house/v2/nearby 。 
 	
 	
 
 #### API网关接口路径的组成
 通过API网关访问接口时路径由三部分组成：`API网关域名`+`应用注册的虚拟路径`+`原始接口路径`  
-  API网关域名：`http://api.route.dooioo.com`  
+  API网关域名：`http://aroute.dooioo.com`  
   应用注册的虚拟路径： `/fy/old/server`  
   原始接口的路径： `/api/v2/house/1234`  
-  完整的请求路径：`http://api.route.dooioo.com/fy/old/server/api/v2/house/1234`
+  完整的请求路径：`http://aroute.dooioo.com/fy/old/server/api/v2/house/1234`
 
 #### 接口数据的安全：登录 OR 无须登录
 通常情况下，登录SSO拦截器（基于工号和密码）是不会拦截数据接口的。  
@@ -297,7 +297,7 @@ public class SalaryApiController {
  ``` java
    # 通过API网关访问
   requst url: 
-     http://api.route.dooioo.com/oa/salary/server/api/salary/v1/anyoneSalary?userCode=8989989
+     http://aroute.dooioo.com/oa/salary/server/api/salary/v1/anyoneSalary?userCode=8989989
   Request Header: 
   		 X-Token:c71edad37eb20f300639496ba7b28d20
   		 
@@ -319,7 +319,7 @@ public class SalaryApiController {
 ``` java
    # 通过API网关访问
   requst url: 
-     http://api.route.dooioo.com/oa/salary/server/api/salary/v1/oreally?userCode=8989989
+     http://aroute.dooioo.com/oa/salary/server/api/salary/v1/oreally?userCode=8989989
   		 
   #服务端调用
   requst url: 
@@ -422,10 +422,10 @@ serviceId默认为API网关。
 通过`X-Instance-Id`、`X-Route-By`开发人员可以判断请求是否到达API网关、是否到达服务接口以及那个节点响应了客户端请求。
 
 
-下图是使用Postman向我们的API网关`api.route.dooioo.com` 发起的一个请求 
+下图是使用Postman向我们的API网关`aroute.dooioo.com` 发起的一个请求 
 
 ```http
-  $.get("http://api.route.dooioo.com/loupan/server/v1/citys")  
+  $.get("http://aroute.dooioo.com/loupan/server/v1/citys")  
 ```
 
 API网关响应如下：  
@@ -433,7 +433,7 @@ API网关响应如下：
 ![API网关请求头]({{book.imagePath}}/parts/chapter1/images/api-route-header.png)  
   
 
-我们通过接口：[http://api.route.dooioo.com/instance/b7b0fc1f593866af3ac8e2526dd0a880](http://api.route.dooioo.com/instance/b7b0fc1f593866af3ac8e2526dd0a880)，即可查询是那个楼盘服务的节点响应了客户端。
+我们通过接口：[http://aroute.dooioo.com/instance/b7b0fc1f593866af3ac8e2526dd0a880](http://aroute.dooioo.com/instance/b7b0fc1f593866af3ac8e2526dd0a880)，即可查询是那个楼盘服务的节点响应了客户端。
 
 ### 注意事项
 #### 静态路由可能导致Nginx IP Hash流量到单节点

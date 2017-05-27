@@ -176,7 +176,7 @@ signature:xsdf23daqazdfdfree2sfsfefeferewr
 ![OAuth Server请求头]({{book.imagePath}}/parts/chapter1/images/oroute_header.png)  
   
 
-我们通过接口：`http://api.route.dooioo.com/instance/{instanceId}`，即可查询是那些节点响应了客户端。
+我们通过接口：`http://aroute.dooioo.com/instance/{instanceId}`，即可查询是那些节点响应了客户端。
 
 ### 注意事项
 #### 集成环境OAuth Server的Https证书无效  

@@ -102,7 +102,7 @@ public class AuthorizedRequestInterceptor extends HandlerInterceptorAdapter {
 
     /**
      * 如果一个接口是通过API网关路由过来的，则API网关会自动在请求头、响应头里添加此HttpHeader X-Route-By是API
-     * 网关节点IP地址的加密，解密请访问：http://api.route.dooioo.cn(com)/instance/{instanceId}
+     * 网关节点IP地址的加密，解密请访问：http://aroute.dooioo.cn(com)/instance/{instanceId}
      */
     String X_Route_By = "X-Route-By";
   }

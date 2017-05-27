@@ -219,9 +219,9 @@ public interface HouseRegisterApplySpi {
 {
  "env":{
    "headers":["环境","内网访问域名","外网访问域名"],
-   "rows":[["正式环境","http://api.route.dooioo.com","https://oroute.dooioo.com"],
-   ["集成环境	","http://api.route.dooioo.cn","https://oroute.dooioo.cn"],
-   ["测试环境	","http://api.route.dooioo.net"]]
+   "rows":[["正式环境","http://aroute.dooioo.com","https://oroute.dooioo.com"],
+   ["集成环境	","http://aroute.dooioo.cn","https://oroute.dooioo.cn"],
+   ["测试环境	","http://aroute.dooioo.net"]]
  },
  "com.lianjia.sh.se.login.spi.core.EmployeeLoginSpi.loginV1.returnJson":  {
    "loginStatus":0,

@@ -6,6 +6,13 @@ Hi，boys，为了简化非微服务应用接入微服务体系，我们开发�
 * 组件使用JDK8编译
 * 组件需依赖Spring Framework（管理生命周期），但是可方便改为独立使用（有需要的私聊）
 
+### changelog
+ 0.8.3: 修复Tomcat端口变更未及时更新健康检查url
+ 
+ 0.8.4: 客户端采用动态token生成方案，提供更高的安全性
+ 
+ 0.8.5: 简化安全Header方案（推荐此版本）
+
 ### 使用指南
 #### 第一步 pom.xml文件添加依赖
 
@@ -13,7 +20,7 @@ Hi，boys，为了简化非微服务应用接入微服务体系，我们开发�
  		<dependency>
 			<groupId>com.lianjia.sh.se</groupId>
 			<artifactId>dummy-eureka-client</artifactId>
-			<version>0.8.3</version>
+			<version>0.8.5</version>
 		</dependency>
  ```
 
@@ -79,11 +86,11 @@ SpringBoot和SpringCloud项目都会有此配置，老Tomcat项目通常来说�
 #### 负载均衡
 组件从多个节点中选择服务节点的策略是：轮询。
 
-#### app
+#### app 和 env
  DiscoveryClient的属性app推荐命名规范为：小写字母，多个单词之间'-'连接。
  例如： `fy-old-server`，`old-login-ui`，`ky-old-server`，`shouhou-serve`
  
- app作为作为服务的唯一标识，必须保证全局唯一。
+ app作为作为服务的唯一标识，必须保证全局唯一，并且不得变更。
  
  默认情况下，所有app都会自动追加前缀：`overseas-`。
  
@@ -91,5 +98,15 @@ SpringBoot和SpringCloud项目都会有此配置，老Tomcat项目通常来说�
  
  因此老项目之间调用时应该为：`this.discoveryClient.findNextServer("overseas-fy-old-server");`
  
-#### env
-  DiscoveryClient的属性env目前仅限：development，test，integration，production，大小写敏感。
+ DiscoveryClient的属性env目前仅限：development，test，integration，production，大小写敏感。
+ 
+#### 缺少X-Login-*相关参数错误
+使用DiscoveryClient访问接口时，请以API文档-头部参数-内部调用Tab为准。
+如果出现缺少`X-Login-UserCode`、`X-Login-CompanyId`、`X-Login-Token`等参数的错误，请提供对应参数。
+
+相应参数说明如下：
+``` java
+	"X-Login-UserCode" ： 员工工号，如果从API网关过来的请求，则是登录员工的工号，内部服务可直接传业务相关工号
+	"X-Login-CompanyId" ：公司ID，如果从API网关过来的请求，则是登录时该员工所选择公司ID，内部服务可直接传业务相关公司
+	"X-Login-Token" ： 员工登录后分配的登录ticket，如果接口需要此参数，则使用方必须提供登录ticket，也就是说此接口只能用在Web。
+```

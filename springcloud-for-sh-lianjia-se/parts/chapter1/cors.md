@@ -2,10 +2,10 @@
 ### Ajax跨域
 Web浏览器对跨域（Cross Domain)请求有着严格的安全限制（same-origin security policy 同源安全策略）。  
 
-下图是从网站`stackoverflow.com` 向我们的API网关`api.route.dooioo.cn` 发起的一个跨域Ajax请求，直接被浏览器拒绝：  
+下图是从网站`stackoverflow.com` 向我们的API网关`aroute.dooioo.cn` 发起的一个跨域Ajax请求，直接被浏览器拒绝：  
 
 ```http
-  $.get("http://api.route.dooioo.cn/loupan/server/v1/citys")  
+  $.get("http://aroute.dooioo.cn/loupan/server/v1/citys")  
 ```
 
 <br>
@@ -28,7 +28,7 @@ JSONP 是 **JSON** with **P**adding的简称，JSONP被Web开发者用来克服�
 假设以下请求：   
 
 ```
-GET  http://api.route.dooioo.cn/loupan/server/v1/citys/1
+GET  http://aroute.dooioo.cn/loupan/server/v1/citys/1
 ```
 
 响应数据为：
@@ -42,7 +42,7 @@ GET  http://api.route.dooioo.cn/loupan/server/v1/citys/1
 如果将此URL赋给HTML标签 &lt;script&gt; 的src：
 ``` javascript
 <script type=“text/javascript"
-        src="http://api.route.dooioo.cn/loupan/server/v1/citys/1">
+        src="http://aroute.dooioo.cn/loupan/server/v1/citys/1">
 </script>
 ```
 那么浏览器会自动下载脚本文件，解释并执行脚本内容。而此时的JSON响应数据会被当做`JavaScript`代码块，并且抛出js语法错误的异常。
@@ -54,10 +54,10 @@ GET  http://api.route.dooioo.cn/loupan/server/v1/citys/1
 
  ``` javascript
 <script type=“text/javascript"
-        src="http://api.route.dooioo.cn/loupan/server/v1/citys/1">
+        src="http://aroute.dooioo.cn/loupan/server/v1/citys/1">
 </script>
 ```
-如果：`api.route.dooioo.cn/loupan/server/v1/citys/1`响应数据为：
+如果：`aroute.dooioo.cn/loupan/server/v1/citys/1`响应数据为：
 ```json
 responseObj= {
    "id": 1,
@@ -82,7 +82,7 @@ responseObj= {
 
 ``` javascript
 <script type=“text/javascript"
-        src="http://api.route.dooioo.cn/loupan/server/v1/citys/1?callback=parseResponse">
+        src="http://aroute.dooioo.cn/loupan/server/v1/citys/1?callback=parseResponse">
 </script>
 ```
 服务端使用客户端提供的方法名包装原始数据并响应：
@@ -113,7 +113,7 @@ parseResponse({
 ```javascript
 $.ajax({
     // script src
-    url: "http://api.route.dooioo.cn/loupan/server/v1/citys/1",
+    url: "http://aroute.dooioo.cn/loupan/server/v1/citys/1",
     // 传到服务端的查询参数-函数名
     jsonp: "callback",
     // Tell jQuery we're expecting JSONP
@@ -160,14 +160,14 @@ $.ajax({
 
 #### CORS 请求流程
 
-1， 从网站```stackoverflow.com``` 向我们的API网关```api.route.dooioo.cn``` 发起Ajax请求： 
+1， 从网站```stackoverflow.com``` 向我们的API网关```aroute.dooioo.cn``` 发起Ajax请求： 
 ```
-$.get("http://api.route.dooioo.cn/loupan/server/v1/citys") 
+$.get("http://aroute.dooioo.cn/loupan/server/v1/citys") 
 ``` 
  
-2， 浏览器发现当前主机域名为：```stackoverflow.com```，但请求的主机域名为：```api.route.dooioo.cn```，断定请求为跨域请求，主动添加Header`Origin`:
+2， 浏览器发现当前主机域名为：```stackoverflow.com```，但请求的主机域名为：```aroute.dooioo.cn```，断定请求为跨域请求，主动添加Header`Origin`:
 ```javascript
- Request URL: http://api.route.dooioo.cn/loupan/server/v1/citys
+ Request URL: http://aroute.dooioo.cn/loupan/server/v1/citys
  Request Method: GET
 ```  
 ```http  
@@ -178,7 +178,7 @@ $.get("http://api.route.dooioo.cn/loupan/server/v1/citys")
 4， 如果不是简单跨域请求，浏览器将发起一个预校验（Preflight）的```OPTION``` 请求。  
 **Preflighted请求** [^2]会发送 ```Access-Control-Request-Method```(客户端发起Http请求的Method) 、```Access-Control-Request-Headers```（客户端自定义的Request Header）,服务端根据Header判断跨域请求是否安全：
  ```javascript
- Request URL: http://api.route.dooioo.cn/loupan/server/v1/citys
+ Request URL: http://aroute.dooioo.cn/loupan/server/v1/citys
  Request Method: OPTION
  ```
  ```http  

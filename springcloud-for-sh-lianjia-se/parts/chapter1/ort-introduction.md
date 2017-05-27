@@ -34,7 +34,7 @@
 受限制区域，包括门店电脑，总部电脑、员工等，是除了机房服务器之外的整个局域网设备。
 
 ### 龙门
-API网关（[http://api.route.dooioo.com](http://api.route.dooioo.com))，Restricted Zone的客户端必须通过API网关访问机房的服务。
+API网关（[http://aroute.dooioo.com](http://aroute.dooioo.com))，Restricted Zone的客户端必须通过API网关访问机房的服务。
 
 API网关也可以称作接入层。
 

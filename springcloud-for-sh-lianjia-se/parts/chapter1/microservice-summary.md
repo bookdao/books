@@ -213,7 +213,7 @@ Zuul是由一系列过滤器组成的，过滤器内置四种类型：
 
 我们的Zuul代理项目(以下统称为**API网关**)，采用了一种命名约定，比如对以下的请求url:
 
-```GET http://api.route.dooioo.cn/loupan/v1/building/3```
+```GET http://aroute.dooioo.cn/loupan/v1/building/3```
 
 API网关默认会将”loupan“作为虚拟主机地址，并从请求路径中移除，此时，转发到后端节点的请求路径变为：  
 
@@ -239,13 +239,13 @@ public interface CitySpi{
   
 强烈推荐前端Web以别名Path请求API网关。
 
-SE团队的API网关域名为（集成环境）：[http://api.route.dooioo.cn](http://api.route.dooioo.cn),正式环境，请将.cn改为.com。  
+SE团队的API网关域名为（集成环境）：[http://aroute.dooioo.cn](http://aroute.dooioo.cn),正式环境，请将.cn改为.com。  
 
 最后让我们粗略过一下前端Web对示例SPI的请求流程：
 
 1， Web 发起Ajax请求：  
 
-```GET http://api.route.dooioo.cn/loupan/server/v1/citys/32```
+```GET http://aroute.dooioo.cn/loupan/server/v1/citys/32```
 
 2，请求到达API网关，首先类型为 “**pre**” 的Zuul Filter找到别名"/loupan/server"对应的虚拟主机地址："loupan-server"，并标识请求为Eureka，将虚拟主机地址放在 ```RequestContext```中。
 
