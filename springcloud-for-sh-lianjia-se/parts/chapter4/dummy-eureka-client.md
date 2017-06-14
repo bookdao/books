@@ -7,11 +7,15 @@ Hi，boys，为了简化非微服务应用接入微服务体系，我们开发�
 * 组件需依赖Spring Framework（管理生命周期），但是可方便改为独立使用（有需要的私聊）
 
 ### changelog
+ 0.8.6：依旧采用动态token的安全方案，但是延长了动态token变更时间（推荐此版本）
+ 
+ ====== 以下为历史版本 =====================
+ 
  0.8.3: 修复Tomcat端口变更未及时更新健康检查url
  
  0.8.4: 客户端采用动态token生成方案，提供更高的安全性
  
- 0.8.5: 简化安全Header方案（推荐此版本）
+ 0.8.5: 简化安全Header方案
 
 ### 使用指南
 #### 第一步 pom.xml文件添加依赖
@@ -20,7 +24,7 @@ Hi，boys，为了简化非微服务应用接入微服务体系，我们开发�
  		<dependency>
 			<groupId>com.lianjia.sh.se</groupId>
 			<artifactId>dummy-eureka-client</artifactId>
-			<version>0.8.5</version>
+			<version>0.8.6</version>
 		</dependency>
  ```
 
@@ -102,7 +106,10 @@ SpringBoot和SpringCloud项目都会有此配置，老Tomcat项目通常来说�
  
 #### 缺少X-Login-*相关参数错误
 使用DiscoveryClient访问接口时，请以API文档-头部参数-内部调用Tab为准。
+
+
 如果出现缺少`X-Login-UserCode`、`X-Login-CompanyId`、`X-Login-Token`等参数的错误，请提供对应参数。
+
 
 相应参数说明如下：
 ``` java

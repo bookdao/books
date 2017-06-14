@@ -39,3 +39,4 @@ bui #Summary
 	
 * [In-a-nutshell](parts/chapter5/overview.md)
 	* [微服务之abc](parts/chapter5/microservice-pratice-in-a-nutshell.md)	
+	* [微服务的一些思考](parts/chapter5/microservice-ph.md)	
